@@ -1,0 +1,23 @@
+{
+  "name": "Production",
+  "values": [
+    {
+      "key": "auth_url",
+      "value": "https://api.novallearn.com/auth",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "content_url",
+      "value": "https://api.novallearn.com/content", 
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "api_gateway_url",
+      "value": "https://api.novallearn.com",
+      "enabled": true,
+      "type": "default"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "Postman Auto Test",
+  "version": "1.0.0",
+  "description": "Automatically run Postman tests when API code changes",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "services/**/*.js",
+      "api-gateway/**/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "API code has been modified. Please check the .postman.json file and run the appropriate Postman collection tests to validate the changes."
+  }
+}

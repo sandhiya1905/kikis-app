@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: nova-learn-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: nova_learn
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - nova-learn-network
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    container_name: nova-learn-gateway
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - AUTH_SERVICE_URL=http://auth-service:3001
+      - CONTENT_SERVICE_URL=http://content-service:3002
+      - SCHOLARSHIP_SERVICE_URL=http://scholarship-service:3003
+      - INTERVIEW_SERVICE_URL=http://interview-service:3004
+      - AI_SERVICE_URL=http://ai-service:5000
+    depends_on:
+      - mongodb
+      - auth-service
+      - content-service
+      - scholarship-service
+      - interview-service
+      - ai-service
+    networks:
+      - nova-learn-network
+
+  # Authentication Service
+  auth-service:
+    build: ./services/auth-service
+    container_name: nova-learn-auth
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/nova_learn?authSource=admin
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - JWT_EXPIRES_IN=24h
+    depends_on:
+      - mongodb
+    networks:
+      - nova-learn-network
+
+  # Content Management Service
+  content-service:
+    build: ./services/content-service
+    container_name: nova-learn-content
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/nova_learn?authSource=admin
+    depends_on:
+      - mongodb
+    volumes:
+      - content_uploads:/app/uploads
+    networks:
+      - nova-learn-network
+
+  # Scholarship Service
+  scholarship-service:
+    build: ./services/scholarship-service
+    container_name: nova-learn-scholarship
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/nova_learn?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - nova-learn-network
+
+  # Interview Service
+  interview-service:
+    build: ./services/interview-service
+    container_name: nova-learn-interview
+    restart: unless-stopped
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/nova_learn?authSource=admin
+      - AI_SERVICE_URL=http://ai-service:5000
+    depends_on:
+      - mongodb
+      - ai-service
+    networks:
+      - nova-learn-network
+
+  # AI/NLP Service (Python)
+  ai-service:
+    build: ./services/ai-service
+    container_name: nova-learn-ai
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - PORT=5000
+      - MONGODB_URI=mongodb://admin:password123@mongodb:27017/nova_learn?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - nova-learn-network
+
+volumes:
+  mongodb_data:
+  content_uploads:
+
+networks:
+  nova-learn-network:
+    driver: bridge

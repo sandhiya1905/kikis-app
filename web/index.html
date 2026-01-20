@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaLearn - Student Learning Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-graduation-cap text-2xl mr-3"></i>
+                    <span class="text-xl font-bold">NovaLearn</span>
+                    <div class="ml-8 flex space-x-4">
+                        <a href="index.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-home mr-2"></i>Home
+                        </a>
+                        <a href="study-materials.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-book mr-2"></i>Study Materials
+                        </a>
+                        <a href="scholarships.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-graduation-cap mr-2"></i>Scholarships
+                        </a>
+                        <a href="chatbot.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-robot mr-2"></i>AI Assistant
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="loginBtn" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button id="registerBtn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </button>
+                    <div id="userMenu" class="hidden">
+                        <span id="userName" class="mr-4"></span>
+                        <button id="addContentBtn" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg transition mr-2">
+                            <i class="fas fa-plus mr-2"></i>Add Content
+                        </button>
+                        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Section -->
+        <div id="welcomeSection" class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                Welcome to NovaLearn
+            </h1>
+            <p class="text-xl text-gray-600 mb-8">
+                Your comprehensive learning platform for college students
+            </p>
+            
+            <!-- Features -->
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <i class="fas fa-book text-3xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Study Materials</h3>
+                    <p class="text-gray-600 mb-4">Access subject-wise notes and syllabus-based study materials</p>
+                    <a href="study-materials.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-external-link-alt mr-2"></i>Browse Materials
+                    </a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <i class="fas fa-graduation-cap text-3xl text-green-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Scholarships</h3>
+                    <p class="text-gray-600 mb-4">Find updated scholarship information with eligibility details</p>
+                    <a href="scholarships.html" class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-external-link-alt mr-2"></i>Browse Scholarships
+                    </a>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <i class="fas fa-robot text-3xl text-purple-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">AI Assistant</h3>
+                    <p class="text-gray-600 mb-4">Get instant help with studies and academic questions</p>
+                    <a href="chatbot.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-external-link-alt mr-2"></i>Chat Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div id="searchSection" class="mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold mb-4">
+                    <i class="fas fa-search mr-2"></i>Search Study Materials
+                </h2>
+                <div class="flex gap-4">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search for study materials, subjects, topics..."
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                    <button 
+                        id="searchBtn" 
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+                    >
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="hidden">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold mb-4">Search Results</h3>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section (for logged in users) -->
+        <div id="dashboardSection" class="hidden">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">
+                        <i class="fas fa-user mr-2"></i>Your Profile
+                    </h3>
+                    <div id="profileInfo"></div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">
+                        <i class="fas fa-chart-bar mr-2"></i>Quick Stats
+                    </h3>
+                    <div id="statsInfo">
+                        <p class="text-gray-600">Welcome to your dashboard!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <h2 class="text-2xl font-bold mb-6">Login to NovaLearn</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="loginEmail" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="your.email@college.edu"
+                    >
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Your password"
+                    >
+                </div>
+                <div class="flex justify-between">
+                    <button 
+                        type="button" 
+                        id="cancelLogin"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Login
+                    </button>
+                </div>
+            </form>
+            <div id="loginMessage" class="mt-4 text-center"></div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-6">Register for NovaLearn</h2>
+            <form id="registerForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input 
+                        type="email" 
+                        id="registerEmail" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="your.email@college.edu"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                    <input 
+                        type="password" 
+                        id="registerPassword" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="At least 6 characters with uppercase, lowercase, and number"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Confirm your password"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="registerName" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Your full name"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">College</label>
+                    <input 
+                        type="text" 
+                        id="registerCollege" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Your college name"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Major</label>
+                    <input 
+                        type="text" 
+                        id="registerMajor" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Your major/field of study"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Academic Year</label>
+                    <select 
+                        id="registerYear" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                        <option value="5">5th Year</option>
+                        <option value="6">6th Year</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Academic Level</label>
+                    <select 
+                        id="registerLevel" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select level</option>
+                        <option value="undergraduate">Undergraduate</option>
+                        <option value="graduate">Graduate</option>
+                        <option value="postgraduate">Postgraduate</option>
+                    </select>
+                </div>
+                <div class="flex justify-between">
+                    <button 
+                        type="button" 
+                        id="cancelRegister"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Register
+                    </button>
+                </div>
+            </form>
+            <div id="registerMessage" class="mt-4 text-center"></div>
+        </div>
+    </div>
+
+    <!-- Add Content Modal -->
+    <div id="addContentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+            <h2 class="text-2xl font-bold mb-6">Add Study Material</h2>
+            <form id="addContentForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Title</label>
+                    <input 
+                        type="text" 
+                        id="contentTitle" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Study material title"
+                    >
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Description</label>
+                    <textarea 
+                        id="contentDescription" 
+                        required
+                        rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Brief description of the content"
+                    ></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Subject</label>
+                    <select 
+                        id="contentSubject" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select subject</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Deep Learning">Deep Learning</option>
+                        <option value="Natural Language Processing">Natural Language Processing</option>
+                        <option value="Computer Vision">Computer Vision</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Statistics">Statistics</option>
+                        <option value="Physics">Physics</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Difficulty Level</label>
+                    <select 
+                        id="contentDifficulty" 
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Select difficulty</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="expert">Expert</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Topics (comma-separated)</label>
+                    <input 
+                        type="text" 
+                        id="contentTopics" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., TensorFlow, Neural Networks, Deep Learning"
+                    >
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Tags (comma-separated)</label>
+                    <input 
+                        type="text" 
+                        id="contentTags" 
+                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="e.g., Google, AI, Research"
+                    >
+                </div>
+                <div class="flex justify-between">
+                    <button 
+                        type="button" 
+                        id="cancelAddContent"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit"
+                        class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition"
+                    >
+                        Add Material
+                    </button>
+                </div>
+            </form>
+            <div id="addContentMessage" class="mt-4 text-center"></div>
+        </div>
+    </div>
+
+    <script src="scripts/create-sample-ai-data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

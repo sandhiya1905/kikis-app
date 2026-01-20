@@ -1,0 +1,42 @@
+# TensorFlow Complete Guide
+
+## Introduction to TensorFlow
+TensorFlow is an open-source machine learning framework developed by Google. It provides a comprehensive ecosystem of tools, libraries, and community resources that lets researchers push the state-of-the-art in ML and developers easily build and deploy ML-powered applications.
+
+## Key Features
+- Flexible ecosystem of tools and libraries
+- Easy model building with high-level APIs
+- Robust ML production anywhere
+- Powerful experimentation for research
+
+## Getting Started
+1. Install TensorFlow: pip install tensorflow
+2. Import the library: import tensorflow as tf
+3. Create your first model
+4. Train and evaluate
+
+## Basic Example
+```python
+import tensorflow as tf
+
+# Create a simple sequential model
+model = tf.keras.Sequential([
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.2),
+    tf.keras.layers.Dense(10)
+])
+
+# Compile the model
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+```
+
+## Advanced Topics
+- Custom layers and models
+- Distributed training
+- TensorFlow Serving
+- TensorFlow Lite for mobile
+- TensorFlow.js for web
+
+This is a sample file for download demonstration in the NovaLearn platform.

@@ -1,0 +1,46 @@
+# Machine Learning Basics
+
+## What is Machine Learning?
+Machine Learning is a subset of artificial intelligence (AI) that provides systems the ability to automatically learn and improve from experience without being explicitly programmed.
+
+## Types of Machine Learning
+
+### 1. Supervised Learning
+- Uses labeled training data
+- Examples: Classification, Regression
+- Algorithms: Linear Regression, Decision Trees, SVM
+
+### 2. Unsupervised Learning
+- Uses unlabeled data
+- Examples: Clustering, Association
+- Algorithms: K-Means, Hierarchical Clustering
+
+### 3. Reinforcement Learning
+- Learning through interaction with environment
+- Examples: Game playing, Robotics
+- Algorithms: Q-Learning, Policy Gradient
+
+## Key Concepts
+- Training Data
+- Features and Labels
+- Model Training
+- Validation and Testing
+- Overfitting and Underfitting
+
+## Popular Libraries
+- Scikit-learn
+- TensorFlow
+- PyTorch
+- Keras
+- Pandas
+- NumPy
+
+## Getting Started Steps
+1. Define the problem
+2. Collect and prepare data
+3. Choose an algorithm
+4. Train the model
+5. Evaluate performance
+6. Deploy and monitor
+
+This is a sample educational file from the NovaLearn platform.

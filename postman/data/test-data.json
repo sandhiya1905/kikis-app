@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "email": "test1@example.com",
+      "password": "password123",
+      "name": "Test User 1",
+      "college": "MIT"
+    },
+    {
+      "email": "test2@example.com", 
+      "password": "password123",
+      "name": "Test User 2",
+      "college": "Stanford"
+    }
+  ],
+  "study_materials": [
+    {
+      "title": "JavaScript Fundamentals",
+      "description": "Basic JavaScript concepts and syntax",
+      "category": "programming",
+      "tags": ["javascript", "programming", "web"]
+    },
+    {
+      "title": "Machine Learning Basics",
+      "description": "Introduction to ML concepts",
+      "category": "ai",
+      "tags": ["ml", "ai", "python"]
+    }
+  ],
+  "scholarships": [
+    {
+      "title": "Tech Excellence Scholarship",
+      "description": "For outstanding computer science students",
+      "amount": 5000,
+      "deadline": "2024-12-31",
+      "eligibility": "CS students with GPA > 3.5"
+    }
+  ]
+}

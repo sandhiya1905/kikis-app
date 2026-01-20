@@ -1,0 +1,22 @@
+{
+  "workspace": {
+    "id": "",
+    "name": "Nova Learn Platform"
+  },
+  "collections": {
+    "main": {
+      "id": "",
+      "name": "Nova Learn APIs"
+    }
+  },
+  "environments": {
+    "local": {
+      "id": "",
+      "name": "Local Development"
+    },
+    "production": {
+      "id": "",
+      "name": "Production"
+    }
+  }
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NovaLearn AI - Chat Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            height: calc(100vh - 120px);
+        }
+        .messages-container {
+            height: calc(100% - 140px);
+        }
+        .message-bubble {
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .ai-message {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+        }
+        .typing-animation {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        .sidebar {
+            width: 260px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+        }
+        .chat-main {
+            flex: 1;
+            background: white;
+        }
+        .input-container {
+            background: white;
+            border-top: 1px solid #e9ecef;
+            padding: 20px;
+        }
+        .input-box {
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            padding: 12px 16px;
+            resize: none;
+            min-height: 24px;
+            max-height: 120px;
+        }
+        .send-button {
+            background: #10b981;
+            border-radius: 8px;
+            padding: 8px 12px;
+            transition: all 0.2s;
+        }
+        .send-button:hover {
+            background: #059669;
+        }
+        .send-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        .message-time {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .new-chat-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 8px 12px;
+            transition: all 0.2s;
+        }
+        .new-chat-btn:hover {
+            background: #e5e7eb;
+        }
+        .chat-history-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chat-history-item:hover {
+            background: #e5e7eb;
+        }
+        .chat-history-item.active {
+            background: #dbeafe;
+            border-left: 3px solid #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-gray-200 px-4 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="flex items-center text-gray-700 hover:text-blue-600 transition">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    <span class="font-medium">Back to NovaLearn</span>
+                </a>
+                <div class="h-6 w-px bg-gray-300"></div>
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold text-gray-900">NovaLearn AI</h1>
+                        <p class="text-xs text-gray-500">Your Learning Assistant</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div id="userInfo" class="hidden text-sm text-gray-600">
+                    <span id="userName"></span>
+                </div>
+                <button id="loginBtn" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                    Sign in
+                </button>
+                <button id="logoutBtn" class="hidden text-sm text-gray-600 hover:text-gray-800">
+                    Sign out
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Chat Interface -->
+    <div class="flex chat-container">
+        <!-- Sidebar -->
+        <div class="sidebar hidden md:block">
+            <div class="p-4">
+                <button id="newChatBtn" class="new-chat-btn w-full flex items-center justify-center text-sm font-medium text-gray-700">
+                    <i class="fas fa-plus mr-2"></i>
+                    New Chat
+                </button>
+            </div>
+            
+            <!-- Quick Prompts -->
+            <div class="px-4 pb-4">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Quick Start</h3>
+                <div class="space-y-2">
+                    <button class="quick-prompt w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition" data-prompt="Help me find study materials for machine learning">
+                        📚 Find Study Materials
+                    </button>
+                    <button class="quick-prompt w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition" data-prompt="Show me scholarships for computer science students">
+                        🎓 Find Scholarships
+                    </button>
+                    <button class="quick-prompt w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition" data-prompt="Give me essay writing tips">
+                        ✍️ Essay Writing Tips
+                    </button>
+                    <button class="quick-prompt w-full text-left p-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg transition" data-prompt="How can I improve my study habits?">
+                        💡 Study Tips
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat History -->
+            <div class="px-4">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Recent Chats</h3>
+                <div id="chatHistory" class="space-y-1">
+                    <!-- Chat history items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main flex flex-col">
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="messages-container overflow-y-auto px-4 py-6">
+                <!-- Welcome Screen -->
+                <div id="welcomeScreen" class="flex flex-col items-center justify-center h-full text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Welcome to NovaLearn AI</h2>
+                    <p class="text-gray-600 mb-8 max-w-md">
+                        I'm your AI learning assistant. I can help you with study materials, scholarships, essay writing, and academic guidance.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+                        <button class="welcome-prompt p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition text-left" data-prompt="Help me find study materials for machine learning">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-book text-blue-500 mr-2"></i>
+                                <span class="font-medium">Study Materials</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Find resources for your courses</p>
+                        </button>
+                        <button class="welcome-prompt p-4 border border-gray-200 rounded-lg hover:border-green-300 hover:bg-green-50 transition text-left" data-prompt="Show me scholarships for computer science students">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-graduation-cap text-green-500 mr-2"></i>
+                                <span class="font-medium">Scholarships</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Discover funding opportunities</p>
+                        </button>
+                        <button class="welcome-prompt p-4 border border-gray-200 rounded-lg hover:border-purple-300 hover:bg-purple-50 transition text-left" data-prompt="Give me essay writing tips">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-pen text-purple-500 mr-2"></i>
+                                <span class="font-medium">Essay Writing</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Improve your writing skills</p>
+                        </button>
+                        <button class="welcome-prompt p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition text-left" data-prompt="How can I improve my study habits?">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-lightbulb text-orange-500 mr-2"></i>
+                                <span class="font-medium">Study Tips</span>
+                            </div>
+                            <p class="text-sm text-gray-600">Learn effective study strategies</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div id="chatMessages" class="hidden space-y-6">
+                    <!-- Messages will be populated here -->
+                </div>
+            </div>
+
+            <!-- Input Container -->
+            <div class="input-container">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex items-end space-x-3">
+                        <div class="flex-1">
+                            <textarea 
+                                id="messageInput" 
+                                placeholder="Message NovaLearn AI..."
+                                class="input-box w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                rows="1"
+                            ></textarea>
+                        </div>
+                        <button 
+                            id="sendButton" 
+                            class="send-button text-white flex items-center justify-center"
+                            disabled
+                        >
+                            <i class="fas fa-paper-plane text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
+                        <span>Press Enter to send, Shift+Enter for new line</span>
+                        <span id="charCount">0/2000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="chatbot.js"></script>
+</body>
+</html>

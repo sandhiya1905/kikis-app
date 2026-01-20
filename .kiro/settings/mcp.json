@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "node",
+      "args": ["-e", "require('@modelcontextprotocol/server-filesystem')"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": ["read_text_file", "list_directory", "get_file_info"]
+    },
+    "postman": {
+      "url": "https://mcp.postman.com/minimal",
+      "headers": {
+        "Authorization": "Bearer ${POSTMAN_API_KEY}"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}
