@@ -105,14 +105,18 @@
         </div>
 
         <!-- Interview Types -->
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="interview-card bg-white p-6 rounded-lg shadow-md cursor-pointer" data-type="technical">
                 <div class="text-center">
                     <i class="fas fa-code text-4xl text-blue-600 mb-4"></i>
                     <h3 class="text-xl font-semibold mb-2">Technical Interview</h3>
                     <p class="text-gray-600 mb-4">Practice coding problems, algorithms, and technical concepts</p>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 mb-2">
                         <i class="fas fa-clock mr-1"></i>30-60 minutes
+                    </div>
+                    <div class="flex justify-center space-x-2">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Coding</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">Algorithms</span>
                     </div>
                 </div>
             </div>
@@ -122,8 +126,12 @@
                     <i class="fas fa-users text-4xl text-green-600 mb-4"></i>
                     <h3 class="text-xl font-semibold mb-2">Behavioral Interview</h3>
                     <p class="text-gray-600 mb-4">Practice soft skills, leadership, and situational questions</p>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 mb-2">
                         <i class="fas fa-clock mr-1"></i>20-45 minutes
+                    </div>
+                    <div class="flex justify-center space-x-2">
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">STAR Method</span>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Leadership</span>
                     </div>
                 </div>
             </div>
@@ -133,66 +141,164 @@
                     <i class="fas fa-chart-line text-4xl text-purple-600 mb-4"></i>
                     <h3 class="text-xl font-semibold mb-2">Case Study</h3>
                     <p class="text-gray-600 mb-4">Solve business problems and analytical challenges</p>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 mb-2">
                         <i class="fas fa-clock mr-1"></i>45-90 minutes
                     </div>
+                    <div class="flex justify-center space-x-2">
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Analysis</span>
+                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Strategy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-card bg-white p-6 rounded-lg shadow-md cursor-pointer" data-type="system-design">
+                <div class="text-center">
+                    <i class="fas fa-sitemap text-4xl text-orange-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">System Design</h3>
+                    <p class="text-gray-600 mb-4">Design scalable systems and architecture</p>
+                    <div class="text-sm text-gray-500 mb-2">
+                        <i class="fas fa-clock mr-1"></i>60-90 minutes
+                    </div>
+                    <div class="flex justify-center space-x-2">
+                        <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">Architecture</span>
+                        <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">Scalability</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Features -->
+        <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-star text-yellow-500 mr-2"></i>
+                Advanced Interview Features
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <i class="fas fa-video text-2xl text-red-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">Video Recording</h3>
+                    <p class="text-sm text-gray-600">Record your interview sessions for later review and analysis</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <i class="fas fa-brain text-2xl text-purple-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">AI Analysis</h3>
+                    <p class="text-sm text-gray-600">Get real-time feedback on your communication and body language</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm">
+                    <i class="fas fa-chart-line text-2xl text-green-600 mb-3"></i>
+                    <h3 class="font-semibold mb-2">Progress Tracking</h3>
+                    <p class="text-sm text-gray-600">Monitor your improvement over time with detailed analytics</p>
                 </div>
             </div>
         </div>
 
         <!-- Interview Setup Modal -->
         <div id="interviewSetupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
-                <h2 class="text-2xl font-bold mb-6">Setup Interview</h2>
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-lg w-full mx-4 max-h-screen overflow-y-auto">
+                <h2 class="text-2xl font-bold mb-6">Setup Interview Session</h2>
                 <form id="interviewSetupForm">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Interview Type</label>
                         <input type="text" id="interviewType" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
                     </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Your Field/Major</label>
-                        <select id="fieldSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select your field</option>
-                            <option value="computer-science">Computer Science</option>
-                            <option value="software-engineering">Software Engineering</option>
-                            <option value="data-science">Data Science</option>
-                            <option value="artificial-intelligence">Artificial Intelligence</option>
-                            <option value="business">Business</option>
-                            <option value="marketing">Marketing</option>
-                            <option value="finance">Finance</option>
-                            <option value="consulting">Consulting</option>
-                            <option value="engineering">Engineering</option>
-                            <option value="other">Other</option>
-                        </select>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Your Field/Major</label>
+                            <select id="fieldSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select your field</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="software-engineering">Software Engineering</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="artificial-intelligence">Artificial Intelligence</option>
+                                <option value="cybersecurity">Cybersecurity</option>
+                                <option value="web-development">Web Development</option>
+                                <option value="mobile-development">Mobile Development</option>
+                                <option value="devops">DevOps</option>
+                                <option value="business">Business</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="finance">Finance</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="product-management">Product Management</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Experience Level</label>
+                            <select id="experienceSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="">Select experience level</option>
+                                <option value="student">Student/Intern</option>
+                                <option value="entry">Entry Level (0-2 years)</option>
+                                <option value="mid">Mid Level (2-5 years)</option>
+                                <option value="senior">Senior Level (5+ years)</option>
+                                <option value="lead">Lead/Principal (8+ years)</option>
+                            </select>
+                        </div>
                     </div>
+                    
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Experience Level</label>
-                        <select id="experienceSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <option value="">Select experience level</option>
-                            <option value="entry">Entry Level (0-2 years)</option>
-                            <option value="mid">Mid Level (2-5 years)</option>
-                            <option value="senior">Senior Level (5+ years)</option>
-                            <option value="student">Student/Intern</option>
-                        </select>
-                    </div>
-                    <div class="mb-6">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Target Company Type</label>
                         <select id="companySelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                             <option value="">Select company type</option>
-                            <option value="faang">FAANG (Facebook, Apple, Amazon, Netflix, Google)</option>
-                            <option value="startup">Startup</option>
+                            <option value="faang">FAANG (Meta, Apple, Amazon, Netflix, Google)</option>
+                            <option value="big-tech">Big Tech (Microsoft, Tesla, Uber, etc.)</option>
+                            <option value="startup">Startup (Series A-C)</option>
+                            <option value="early-startup">Early Startup (Pre-Series A)</option>
                             <option value="enterprise">Large Enterprise</option>
                             <option value="consulting">Consulting Firm</option>
                             <option value="finance">Financial Services</option>
+                            <option value="healthcare">Healthcare/Biotech</option>
+                            <option value="government">Government/Public Sector</option>
                             <option value="general">General</option>
                         </select>
                     </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Interview Difficulty</label>
+                        <select id="difficultySelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="beginner">Beginner - Basic questions</option>
+                            <option value="intermediate" selected>Intermediate - Standard interview level</option>
+                            <option value="advanced">Advanced - Senior level questions</option>
+                            <option value="expert">Expert - Principal/Staff level</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Session Duration</label>
+                        <select id="durationSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="15">Quick Practice (15 minutes)</option>
+                            <option value="30" selected>Standard Session (30 minutes)</option>
+                            <option value="45">Extended Session (45 minutes)</option>
+                            <option value="60">Full Interview (60 minutes)</option>
+                            <option value="90">Comprehensive (90 minutes)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Advanced Options</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="enableRecording" class="mr-2">
+                                <span class="text-sm">Enable video recording for review</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="enableAnalysis" class="mr-2" checked>
+                                <span class="text-sm">Enable real-time AI analysis</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="enableHints" class="mr-2">
+                                <span class="text-sm">Allow hints during difficult questions</span>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <div class="flex justify-between">
-                        <button type="button" id="cancelSetup" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
+                        <button type="button" id="cancelSetup" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg transition">
                             Cancel
                         </button>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                            Start Interview
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                            <i class="fas fa-play mr-2"></i>Start Interview
                         </button>
                     </div>
                 </form>
