@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Preparation - NovaLearn</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .typing-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .typing-indicator:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator:nth-child(2) { animation-delay: -0.16s; }
+        .typing-indicator:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .ai-message {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .interview-card {
+            transition: all 0.3s ease;
+        }
+        
+        .interview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-graduation-cap text-2xl mr-3"></i>
+                    <span class="text-xl font-bold">NovaLearn</span>
+                    <div class="ml-8 flex space-x-4">
+                        <a href="index.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-home mr-2"></i>Home
+                        </a>
+                        <a href="study-materials.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-book mr-2"></i>Study Materials
+                        </a>
+                        <a href="scholarships.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-graduation-cap mr-2"></i>Scholarships
+                        </a>
+                        <a href="interview-prep.html" class="bg-blue-700 px-3 py-2 rounded-lg">
+                            <i class="fas fa-user-tie mr-2"></i>Interview Prep
+                        </a>
+                        <a href="chatbot.html" class="hover:bg-blue-700 px-3 py-2 rounded-lg transition">
+                            <i class="fas fa-robot mr-2"></i>AI Assistant
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="loginBtn" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button id="registerBtn" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </button>
+                    <div id="userMenu" class="hidden">
+                        <span id="userName" class="mr-4"></span>
+                        <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-user-tie text-blue-600 mr-3"></i>
+                Interview Preparation
+            </h1>
+            <p class="text-xl text-gray-600">
+                Practice with AI-powered mock interviews and get personalized feedback
+            </p>
+        </div>
+
+        <!-- Interview Types -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="interview-card bg-white p-6 rounded-lg shadow-md cursor-pointer" data-type="technical">
+                <div class="text-center">
+                    <i class="fas fa-code text-4xl text-blue-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Technical Interview</h3>
+                    <p class="text-gray-600 mb-4">Practice coding problems, algorithms, and technical concepts</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-clock mr-1"></i>30-60 minutes
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interview-card bg-white p-6 rounded-lg shadow-md cursor-pointer" data-type="behavioral">
+                <div class="text-center">
+                    <i class="fas fa-users text-4xl text-green-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Behavioral Interview</h3>
+                    <p class="text-gray-600 mb-4">Practice soft skills, leadership, and situational questions</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-clock mr-1"></i>20-45 minutes
+                    </div>
+                </div>
+            </div>
+            
+            <div class="interview-card bg-white p-6 rounded-lg shadow-md cursor-pointer" data-type="case-study">
+                <div class="text-center">
+                    <i class="fas fa-chart-line text-4xl text-purple-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Case Study</h3>
+                    <p class="text-gray-600 mb-4">Solve business problems and analytical challenges</p>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-clock mr-1"></i>45-90 minutes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Setup Modal -->
+        <div id="interviewSetupModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+                <h2 class="text-2xl font-bold mb-6">Setup Interview</h2>
+                <form id="interviewSetupForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Interview Type</label>
+                        <input type="text" id="interviewType" readonly class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Your Field/Major</label>
+                        <select id="fieldSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select your field</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="software-engineering">Software Engineering</option>
+                            <option value="data-science">Data Science</option>
+                            <option value="artificial-intelligence">Artificial Intelligence</option>
+                            <option value="business">Business</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="finance">Finance</option>
+                            <option value="consulting">Consulting</option>
+                            <option value="engineering">Engineering</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Experience Level</label>
+                        <select id="experienceSelect" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select experience level</option>
+                            <option value="entry">Entry Level (0-2 years)</option>
+                            <option value="mid">Mid Level (2-5 years)</option>
+                            <option value="senior">Senior Level (5+ years)</option>
+                            <option value="student">Student/Intern</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Target Company Type</label>
+                        <select id="companySelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select company type</option>
+                            <option value="faang">FAANG (Facebook, Apple, Amazon, Netflix, Google)</option>
+                            <option value="startup">Startup</option>
+                            <option value="enterprise">Large Enterprise</option>
+                            <option value="consulting">Consulting Firm</option>
+                            <option value="finance">Financial Services</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" id="cancelSetup" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                            Start Interview
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Interview Session -->
+        <div id="interviewSession" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">
+                        <i class="fas fa-microphone text-red-500 mr-2"></i>
+                        Interview in Progress
+                    </h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-600">
+                            <i class="fas fa-clock mr-1"></i>
+                            <span id="interviewTimer">00:00</span>
+                        </div>
+                        <button id="endInterview" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition">
+                            <i class="fas fa-stop mr-2"></i>End Interview
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Interface -->
+                <div class="border rounded-lg h-96 flex flex-col">
+                    <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-4">
+                        <!-- Messages will be added here -->
+                    </div>
+                    
+                    <div class="border-t p-4">
+                        <div class="flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="messageInput" 
+                                placeholder="Type your answer here..."
+                                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                            <button 
+                                id="sendMessage" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition"
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500">
+                            Press Enter to send your response
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interview Results -->
+        <div id="interviewResults" class="hidden">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-2xl font-bold mb-6">
+                    <i class="fas fa-chart-bar text-green-600 mr-2"></i>
+                    Interview Results
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold">Performance Summary</h3>
+                        <div id="performanceMetrics">
+                            <!-- Performance metrics will be added here -->
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold">Feedback & Recommendations</h3>
+                        <div id="feedbackSection">
+                            <!-- Feedback will be added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-center space-x-4">
+                    <button id="retryInterview" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+                        <i class="fas fa-redo mr-2"></i>Try Again
+                    </button>
+                    <button id="newInterview" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg transition">
+                        <i class="fas fa-plus mr-2"></i>New Interview
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Interviews -->
+        <div id="recentInterviews" class="mt-8">
+            <h2 class="text-2xl font-bold mb-6">
+                <i class="fas fa-history text-gray-600 mr-2"></i>
+                Recent Interview Sessions
+            </h2>
+            <div id="interviewHistory" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Interview history will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="interview-prep.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

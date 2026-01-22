@@ -296,7 +296,7 @@ class ChatbotApp {
                 </div>
                 <div class="flex flex-col max-w-3xl">
                     <div class="message-bubble ai-message px-4 py-3 rounded-2xl">
-                        <div class="whitespace-pre-wrap text-gray-800">${this.formatAIResponse(text)}</div>
+                        <div class="whitespace-pre-wrap text-gray-800 ai-response-content"></div>
                     </div>
                     <div class="message-time mt-1">${timestamp}</div>
                 </div>
@@ -319,7 +319,44 @@ class ChatbotApp {
             }, 100);
         }
 
+        // If it's an AI message, start the typing animation
+        if (!isUser && animate) {
+            this.typeWriterEffect(messageDiv.querySelector('.ai-response-content'), text);
+        } else if (!isUser) {
+            messageDiv.querySelector('.ai-response-content').innerHTML = this.formatAIResponse(text);
+        }
+
         this.scrollToBottom();
+    }
+
+    async typeWriterEffect(element, text) {
+        const formattedText = this.formatAIResponse(text);
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = formattedText;
+        const plainText = tempDiv.textContent || tempDiv.innerText || '';
+        
+        element.innerHTML = '';
+        let currentIndex = 0;
+        const speed = 30; // milliseconds per character
+        
+        const typeChar = () => {
+            if (currentIndex < plainText.length) {
+                const char = plainText[currentIndex];
+                element.textContent += char;
+                currentIndex++;
+                
+                // Add some randomness to typing speed
+                const delay = speed + Math.random() * 20;
+                setTimeout(typeChar, delay);
+                
+                this.scrollToBottom();
+            } else {
+                // Replace with formatted HTML after typing is complete
+                element.innerHTML = formattedText;
+            }
+        };
+        
+        typeChar();
     }
 
     showTypingIndicator() {
@@ -357,51 +394,73 @@ class ChatbotApp {
     }
 
     async generateAIResponse(message) {
-        // Simulate AI thinking time
-        await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 2000));
+        // Simulate AI thinking time with more realistic delay
+        await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
         const lowerMessage = message.toLowerCase();
+        const context = this.getConversationContext();
         
-        // Study materials related
-        if (lowerMessage.includes('study material') || lowerMessage.includes('learning') || lowerMessage.includes('course')) {
-            return this.getStudyMaterialResponse(lowerMessage);
+        // Enhanced pattern matching with context awareness
+        const patterns = [
+            // Academic subjects
+            { keywords: ['machine learning', 'ml', 'neural network', 'deep learning'], handler: () => this.getMLResponse(message, context) },
+            { keywords: ['artificial intelligence', 'ai', 'tensorflow', 'pytorch'], handler: () => this.getAIResponse(message, context) },
+            { keywords: ['computer science', 'programming', 'coding', 'software', 'algorithm'], handler: () => this.getCSResponse(message, context) },
+            { keywords: ['data science', 'analytics', 'statistics', 'python', 'r programming'], handler: () => this.getDataScienceResponse(message, context) },
+            { keywords: ['mathematics', 'math', 'calculus', 'linear algebra', 'statistics'], handler: () => this.getMathResponse(message, context) },
+            
+            // Academic support
+            { keywords: ['study material', 'learning', 'course', 'textbook', 'resource'], handler: () => this.getStudyMaterialResponse(message, context) },
+            { keywords: ['scholarship', 'funding', 'financial aid', 'grant', 'fellowship'], handler: () => this.getScholarshipResponse(message, context) },
+            { keywords: ['essay', 'writing', 'application', 'personal statement'], handler: () => this.getEssayResponse(message, context) },
+            { keywords: ['study tip', 'study habit', 'how to study', 'learning technique'], handler: () => this.getStudyTipsResponse(message, context) },
+            
+            // Career and academic planning
+            { keywords: ['career', 'job', 'internship', 'resume', 'interview'], handler: () => this.getCareerResponse(message, context) },
+            { keywords: ['college', 'university', 'admission', 'application'], handler: () => this.getCollegeResponse(message, context) },
+            { keywords: ['research', 'thesis', 'dissertation', 'publication'], handler: () => this.getResearchResponse(message, context) },
+            
+            // Specific help requests
+            { keywords: ['help', 'assist', 'support', 'guide'], handler: () => this.getHelpResponse(message, context) },
+            { keywords: ['explain', 'what is', 'how does', 'define'], handler: () => this.getExplanationResponse(message, context) },
+            
+            // Greetings and conversation
+            { keywords: ['hello', 'hi', 'hey', 'good morning', 'good afternoon'], handler: () => this.getGreetingResponse(message, context) },
+            { keywords: ['thank', 'thanks', 'appreciate'], handler: () => this.getGratitudeResponse(message, context) },
+            { keywords: ['bye', 'goodbye', 'see you', 'farewell'], handler: () => this.getFarewellResponse(message, context) }
+        ];
+
+        // Find matching pattern
+        for (const pattern of patterns) {
+            if (pattern.keywords.some(keyword => lowerMessage.includes(keyword))) {
+                return await pattern.handler();
+            }
         }
         
-        // Scholarship related
-        if (lowerMessage.includes('scholarship') || lowerMessage.includes('funding') || lowerMessage.includes('financial aid')) {
-            return this.getScholarshipResponse(lowerMessage);
-        }
+        // Enhanced default response with context
+        return this.getContextualDefaultResponse(message, context);
+    }
+
+    getConversationContext() {
+        const currentChat = this.chats.find(c => c.id === this.currentChatId);
+        if (!currentChat || !currentChat.messages) return { previousTopics: [], messageCount: 0 };
         
-        // Essay writing
-        if (lowerMessage.includes('essay') || lowerMessage.includes('writing') || lowerMessage.includes('application')) {
-            return this.getEssayResponse(lowerMessage);
-        }
+        const recentMessages = currentChat.messages.slice(-6); // Last 6 messages for context
+        const topics = [];
         
-        // Study tips
-        if (lowerMessage.includes('study tip') || lowerMessage.includes('study habit') || lowerMessage.includes('how to study')) {
-            return this.getStudyTipsResponse();
-        }
+        recentMessages.forEach(msg => {
+            const text = msg.text.toLowerCase();
+            if (text.includes('machine learning') || text.includes('ml')) topics.push('ml');
+            if (text.includes('scholarship') || text.includes('funding')) topics.push('scholarship');
+            if (text.includes('essay') || text.includes('writing')) topics.push('writing');
+            if (text.includes('study') || text.includes('learning')) topics.push('study');
+        });
         
-        // Specific subjects
-        if (lowerMessage.includes('machine learning') || lowerMessage.includes('ml')) {
-            return this.getMLResponse();
-        }
-        
-        if (lowerMessage.includes('tensorflow') || lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
-            return this.getAIResponse();
-        }
-        
-        if (lowerMessage.includes('computer science') || lowerMessage.includes('programming') || lowerMessage.includes('coding')) {
-            return this.getCSResponse();
-        }
-        
-        // Greetings
-        if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
-            return this.getGreetingResponse();
-        }
-        
-        // Default response
-        return this.getDefaultResponse();
+        return {
+            previousTopics: [...new Set(topics)],
+            messageCount: currentChat.messages.length,
+            recentMessages: recentMessages.slice(-3)
+        };
     }
 
     getStudyMaterialResponse(message) {
@@ -440,16 +499,89 @@ class ChatbotApp {
         return responses[Math.floor(Math.random() * responses.length)];
     }
 
-    getMLResponse() {
-        return "🤖 **Machine Learning - Your Complete Guide:**\n\n**Study Resources Available:**\n📚 Comprehensive ML resources including basics, algorithms, and practical implementations\n📖 TensorFlow guides and tutorials\n🔬 Research papers and case studies\n💻 Hands-on coding examples\n\n**Scholarship Opportunities:**\n🎓 Google AI Research Scholarship ($50,000)\n🎓 Microsoft AI for Good Scholarship ($25,000)\n🎓 NVIDIA Graduate Fellowship ($50,000)\n\n**Recommended Learning Path:**\n1. **Supervised Learning** - Classification and regression\n2. **Unsupervised Learning** - Clustering and dimensionality reduction\n3. **Reinforcement Learning** - Decision making and optimization\n4. **Deep Learning** - Neural networks and advanced architectures\n\n**Essential Tools:**\n🛠️ **Python** - Primary programming language\n🛠️ **scikit-learn** - Traditional ML algorithms\n🛠️ **TensorFlow/PyTorch** - Deep learning frameworks\n🛠️ **Jupyter Notebooks** - Interactive development\n\nWhat specific ML topic interests you most?";
+    getMLResponse(message, context) {
+        const responses = [
+            "🤖 **Machine Learning - Your Complete Guide:**\n\n**📚 Study Resources Available:**\n• Comprehensive ML fundamentals and advanced topics\n• TensorFlow and PyTorch tutorials with hands-on examples\n• Research papers from top conferences (NeurIPS, ICML, ICLR)\n• Interactive Jupyter notebooks and coding exercises\n\n**🎓 Scholarship Opportunities:**\n• Google AI Research Scholarship ($50,000)\n• Microsoft AI for Good Scholarship ($25,000)\n• NVIDIA Graduate Fellowship ($50,000)\n• DeepMind Scholarship Program (£40,000)\n\n**📈 Recommended Learning Path:**\n1. **Foundations** - Statistics, linear algebra, Python programming\n2. **Supervised Learning** - Regression, classification, decision trees\n3. **Unsupervised Learning** - Clustering, PCA, anomaly detection\n4. **Deep Learning** - Neural networks, CNNs, RNNs, Transformers\n5. **Specialized Areas** - Computer vision, NLP, reinforcement learning\n\n**🛠️ Essential Tools & Libraries:**\n• **Python** - Primary programming language\n• **scikit-learn** - Traditional ML algorithms\n• **TensorFlow/PyTorch** - Deep learning frameworks\n• **Pandas/NumPy** - Data manipulation and analysis\n• **Matplotlib/Seaborn** - Data visualization\n\nWhat specific aspect of machine learning interests you most? I can provide more targeted guidance!",
+            
+            "🧠 **Machine Learning Mastery Path:**\n\n**🎯 Current Industry Trends:**\n• **Large Language Models** - GPT, BERT, T5 architectures\n• **Computer Vision** - Vision Transformers, CLIP, DALL-E\n• **Multimodal AI** - Combining text, image, and audio\n• **Federated Learning** - Privacy-preserving distributed training\n• **AutoML** - Automated machine learning pipelines\n\n**💼 Career Opportunities:**\n• **ML Engineer** ($120k-200k) - Production ML systems\n• **Research Scientist** ($150k-300k) - Algorithm development\n• **Data Scientist** ($100k-180k) - Business insights from data\n• **AI Product Manager** ($130k-220k) - AI product strategy\n\n**📖 Top Learning Resources:**\n• **Andrew Ng's ML Course** - Foundational concepts\n• **Fast.ai** - Practical deep learning approach\n• **Papers With Code** - Latest research implementations\n• **Kaggle** - Competitions and datasets\n\n**🔬 Research Areas to Explore:**\n• **Explainable AI** - Understanding model decisions\n• **Few-shot Learning** - Learning from limited data\n• **Neural Architecture Search** - Automated model design\n• **Continual Learning** - Learning without forgetting\n\nWhich career path or research area would you like to explore further?"
+        ];
+        
+        if (context.previousTopics.includes('ml') && context.messageCount > 2) {
+            return "🔄 **Building on Our ML Discussion:**\n\nSince we've been talking about machine learning, let me dive deeper into specific areas:\n\n**🎯 Advanced Topics:**\n• **Transfer Learning** - Leveraging pre-trained models\n• **Ensemble Methods** - Combining multiple models\n• **Hyperparameter Optimization** - Automated tuning\n• **Model Interpretability** - SHAP, LIME, attention visualization\n\n**🚀 Practical Projects to Build:**\n1. **Image Classification** - Using CNNs on custom datasets\n2. **Sentiment Analysis** - NLP with transformer models\n3. **Recommendation System** - Collaborative filtering\n4. **Time Series Forecasting** - LSTM/GRU networks\n\nWhich project type aligns with your learning goals?";
+        }
+        
+        return responses[Math.floor(Math.random() * responses.length)];
     }
 
-    getAIResponse() {
-        return "🧠 **Artificial Intelligence - Comprehensive Overview:**\n\n**Study Materials:**\n📖 TensorFlow guides and neural network tutorials\n📚 AI research papers and cutting-edge developments\n🎯 Computer Vision and NLP resources\n💡 Ethics in AI and responsible development\n\n**Career Opportunities:**\n🚀 **Research Scientist** - Advancing AI knowledge\n💼 **ML Engineer** - Building AI systems\n🎨 **AI Product Manager** - Bridging tech and business\n🔍 **Data Scientist** - Extracting insights from data\n\n**Scholarship Support:**\n🎓 Multiple AI-focused scholarships available\n💰 Funding for underrepresented groups in tech\n🌟 Research assistantship opportunities\n\n**Key Specializations:**\n• **Machine Learning** - Algorithms and statistical models\n• **Deep Learning** - Neural networks and architectures\n• **Natural Language Processing** - Understanding human language\n• **Computer Vision** - Image and video analysis\n• **Robotics** - Intelligent physical systems\n\nAre you interested in a particular AI specialization?";
+    getDataScienceResponse(message, context) {
+        return "📊 **Data Science - Complete Roadmap:**\n\n**🔍 Core Skills & Tools:**\n• **Programming** - Python (pandas, numpy), R, SQL\n• **Statistics** - Hypothesis testing, regression, Bayesian methods\n• **Visualization** - Matplotlib, Seaborn, Plotly, Tableau\n• **Machine Learning** - scikit-learn, feature engineering\n• **Big Data** - Spark, Hadoop, cloud platforms (AWS, GCP)\n\n**📈 Data Science Workflow:**\n1. **Problem Definition** - Understanding business objectives\n2. **Data Collection** - APIs, databases, web scraping\n3. **Data Cleaning** - Handling missing values, outliers\n4. **Exploratory Analysis** - Statistical summaries, visualizations\n5. **Feature Engineering** - Creating meaningful variables\n6. **Modeling** - Algorithm selection and validation\n7. **Deployment** - Production systems and monitoring\n\n**💰 Scholarship Opportunities:**\n• **Kaggle Learn Scholarships** - Various amounts\n• **Women in Data Science** ($5,000-15,000)\n• **Diversity in Data Science** ($10,000)\n\n**🎯 Specialization Areas:**\n• **Business Analytics** - KPIs, A/B testing, growth metrics\n• **Healthcare Analytics** - Clinical data, drug discovery\n• **Financial Analytics** - Risk modeling, algorithmic trading\n• **Marketing Analytics** - Customer segmentation, attribution\n\nWhat industry or application area interests you most?";
     }
 
-    getCSResponse() {
-        return "💻 **Computer Science - Your Gateway to Tech:**\n\n**Study Materials Available:**\n📚 Programming tutorials (Python, Java, C++, JavaScript)\n🔧 Data structures and algorithms guides\n🏗️ Software engineering best practices\n🔐 Cybersecurity fundamentals\n🌐 Web development resources\n\n**Scholarship Opportunities:**\n🎓 **Google Computer Science Scholarships** - Various amounts\n🎓 **Microsoft Diversity in Tech** ($25,000)\n🎓 **Adobe Research Women-in-Technology** ($10,000)\n🎓 **Palantir Women in Technology** ($7,000)\n\n**Core Skills to Master:**\n• **Programming Languages** - Start with Python or Java\n• **Data Structures** - Arrays, trees, graphs, hash tables\n• **Algorithms** - Sorting, searching, dynamic programming\n• **System Design** - Scalable architecture principles\n• **Database Management** - SQL and NoSQL systems\n\n**Career Paths:**\n🚀 **Software Engineer** - Building applications and systems\n🔍 **Data Scientist** - Analyzing data for insights\n🛡️ **Cybersecurity Specialist** - Protecting digital assets\n🎮 **Game Developer** - Creating interactive experiences\n☁️ **Cloud Architect** - Designing scalable infrastructure\n\nWhat area of computer science interests you most?";
+    getMathResponse(message, context) {
+        return "🔢 **Mathematics for STEM Success:**\n\n**📚 Essential Math Areas:**\n• **Calculus** - Derivatives, integrals, multivariable calculus\n• **Linear Algebra** - Matrices, eigenvalues, vector spaces\n• **Statistics & Probability** - Distributions, hypothesis testing\n• **Discrete Mathematics** - Graph theory, combinatorics\n• **Differential Equations** - Modeling dynamic systems\n\n**🎯 Applications by Field:**\n• **Computer Science** - Algorithms, complexity theory\n• **Data Science** - Statistical inference, optimization\n• **Engineering** - Signal processing, control systems\n• **Physics** - Quantum mechanics, relativity\n• **Economics** - Game theory, econometrics\n\n**📖 Study Resources:**\n• **Khan Academy** - Free comprehensive courses\n• **MIT OpenCourseWare** - University-level materials\n• **Wolfram Alpha** - Problem solving and visualization\n• **3Blue1Brown** - Intuitive video explanations\n\n**💡 Study Strategies:**\n• **Practice Problems** - Solve many varied examples\n• **Proof Writing** - Develop logical reasoning\n• **Visual Learning** - Use graphs and geometric intuition\n• **Real Applications** - Connect to practical problems\n\nWhich math area would you like to focus on or need help with?";
+    }
+
+    getCareerResponse(message, context) {
+        return "🚀 **Career Development Guide:**\n\n**💼 Tech Career Paths:**\n• **Software Engineering** - Frontend, backend, full-stack\n• **Data & AI** - Data scientist, ML engineer, AI researcher\n• **Product & Design** - Product manager, UX designer\n• **DevOps & Infrastructure** - Cloud architect, site reliability\n• **Cybersecurity** - Security analyst, penetration tester\n\n**📝 Resume & Application Tips:**\n• **Technical Skills** - List relevant programming languages, tools\n• **Projects** - Showcase GitHub repositories with clear documentation\n• **Experience** - Quantify impact with metrics and results\n• **Education** - Include relevant coursework, GPA if strong\n• **Certifications** - AWS, Google Cloud, industry-specific certs\n\n**🎯 Interview Preparation:**\n• **Technical Interviews** - LeetCode, system design practice\n• **Behavioral Questions** - STAR method for storytelling\n• **Company Research** - Mission, values, recent news\n• **Questions to Ask** - Growth opportunities, team culture\n\n**🌐 Networking & Opportunities:**\n• **LinkedIn** - Professional profile and connections\n• **GitHub** - Active contribution and portfolio\n• **Conferences** - Industry events and meetups\n• **Mentorship** - Find experienced professionals\n\nWhat specific career area or job search challenge can I help you with?";
+    }
+
+    getResearchResponse(message, context) {
+        return "🔬 **Academic Research Excellence:**\n\n**📊 Research Process:**\n1. **Literature Review** - Survey existing work thoroughly\n2. **Problem Identification** - Find gaps and opportunities\n3. **Methodology Design** - Experimental or theoretical approach\n4. **Data Collection** - Systematic and reproducible methods\n5. **Analysis & Results** - Statistical significance and interpretation\n6. **Publication** - Conference papers, journal articles\n\n**📚 Research Tools & Resources:**\n• **Literature Search** - Google Scholar, arXiv, IEEE Xplore\n• **Reference Management** - Zotero, Mendeley, EndNote\n• **Data Analysis** - R, Python, MATLAB, SPSS\n• **Writing** - LaTeX, Overleaf for academic formatting\n• **Collaboration** - Git for code, shared documents\n\n**🎓 Funding Opportunities:**\n• **NSF Graduate Research Fellowship** ($37,000/year)\n• **NIH Training Grants** (Various amounts)\n• **Industry Partnerships** - Google, Microsoft, Adobe research\n• **University Grants** - Internal funding programs\n\n**📈 Publication Strategy:**\n• **Conference Papers** - Faster feedback, networking\n• **Journal Articles** - Higher impact, thorough review\n• **Preprints** - Early visibility on arXiv, bioRxiv\n• **Open Access** - Broader reach and citations\n\n**🤝 Collaboration Tips:**\n• **Find Mentors** - Experienced researchers in your field\n• **Join Research Groups** - Active labs with funding\n• **Attend Conferences** - Present work, get feedback\n• **Peer Review** - Contribute to the academic community\n\nWhat stage of research are you in, or what specific research area interests you?";
+    }
+
+    getHelpResponse(message, context) {
+        const helpAreas = [
+            "🎯 **I'm here to help with your academic journey!**\n\nI can assist you with:\n\n**📚 Academic Support:**\n• Study materials and resources for any subject\n• Learning strategies and study techniques\n• Research guidance and methodology\n• Academic writing and essay tips\n\n**💰 Financial Support:**\n• Scholarship opportunities and applications\n• Grant writing and funding strategies\n• Financial aid navigation\n\n**🚀 Career Development:**\n• Career path exploration\n• Resume and interview preparation\n• Networking and professional development\n• Industry insights and trends\n\n**🔬 Subject Expertise:**\n• STEM fields (CS, AI, Math, Engineering)\n• Research methodologies\n• Technical skills development\n\nWhat specific area would you like help with today?",
+            
+            "💡 **Let me guide you to the right resources!**\n\nBased on what you're looking for, I can provide:\n\n**🎓 Academic Excellence:**\n• Personalized study plans\n• Subject-specific resources\n• Exam preparation strategies\n• Time management techniques\n\n**📝 Writing & Communication:**\n• Essay structure and argumentation\n• Research paper writing\n• Application essays\n• Technical documentation\n\n**🌟 Opportunities & Growth:**\n• Scholarship matching\n• Internship guidance\n• Conference and competition info\n• Skill development roadmaps\n\nTell me more about your specific situation or goals, and I'll provide targeted assistance!"
+        ];
+        
+        return helpAreas[Math.floor(Math.random() * helpAreas.length)];
+    }
+
+    getExplanationResponse(message, context) {
+        const lowerMessage = message.toLowerCase();
+        
+        if (lowerMessage.includes('machine learning') || lowerMessage.includes('ml')) {
+            return "🤖 **Machine Learning Explained:**\n\nMachine Learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed for every scenario.\n\n**🔍 Key Concepts:**\n• **Training Data** - Examples used to teach the algorithm\n• **Features** - Input variables that help make predictions\n• **Model** - The mathematical representation learned from data\n• **Prediction** - Output generated for new, unseen data\n\n**📊 Types of ML:**\n• **Supervised** - Learning from labeled examples (like email spam detection)\n• **Unsupervised** - Finding patterns in unlabeled data (like customer segmentation)\n• **Reinforcement** - Learning through trial and error with rewards (like game playing)\n\n**🎯 Real-World Applications:**\n• Netflix recommendations\n• Google search results\n• Medical diagnosis assistance\n• Autonomous vehicles\n• Financial fraud detection\n\nWould you like me to explain any specific ML concept in more detail?";
+        }
+        
+        if (lowerMessage.includes('artificial intelligence') || lowerMessage.includes('ai')) {
+            return "🧠 **Artificial Intelligence Explained:**\n\nAI is the simulation of human intelligence in machines, enabling them to think, learn, and solve problems like humans do.\n\n**🔬 Core Components:**\n• **Machine Learning** - Learning from data\n• **Natural Language Processing** - Understanding human language\n• **Computer Vision** - Interpreting visual information\n• **Robotics** - Physical interaction with the world\n• **Expert Systems** - Knowledge-based decision making\n\n**📈 AI Evolution:**\n• **Narrow AI** (Current) - Specialized for specific tasks\n• **General AI** (Future) - Human-level intelligence across domains\n• **Super AI** (Theoretical) - Exceeding human capabilities\n\n**🌍 Impact Areas:**\n• Healthcare - Drug discovery, diagnosis\n• Transportation - Autonomous vehicles\n• Education - Personalized learning\n• Environment - Climate modeling, conservation\n• Business - Automation, optimization\n\nWhat aspect of AI would you like to explore further?";
+        }
+        
+        return "🤔 **I'd be happy to explain that concept!**\n\nTo give you the most helpful explanation, could you be more specific about what you'd like to understand?\n\nI can explain:\n• **Technical concepts** - Algorithms, programming, mathematics\n• **Academic topics** - Research methods, study strategies\n• **Career paths** - Job roles, industry trends\n• **Educational processes** - Applications, scholarships, planning\n\nJust let me know what specific topic or concept you'd like me to break down for you!";
+    }
+
+    getGratitudeResponse(message, context) {
+        const responses = [
+            "😊 **You're very welcome!** I'm glad I could help.\n\nIs there anything else you'd like to explore or learn about? I'm here to support your academic journey in any way I can!",
+            "🌟 **Happy to help!** That's what I'm here for.\n\nFeel free to ask me anything else about your studies, career goals, or academic planning. I'm always ready to assist!",
+            "💙 **My pleasure!** Helping students succeed is what I love doing.\n\nDon't hesitate to reach out whenever you need guidance, resources, or just want to discuss your academic interests!"
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    getFarewellResponse(message, context) {
+        const responses = [
+            "👋 **Goodbye for now!** It was great helping you today.\n\nRemember, I'm always here when you need academic support, study resources, or career guidance. Best of luck with your studies!",
+            "🌟 **Take care!** I hope our conversation was helpful.\n\nKeep pursuing your educational goals, and don't hesitate to come back anytime you need assistance. You've got this!",
+            "📚 **See you later!** Thanks for the great conversation.\n\nContinue working hard on your academic journey. I'll be here whenever you need help with studies, scholarships, or career planning!"
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    getContextualDefaultResponse(message, context) {
+        if (context.messageCount === 0) {
+            return this.getGreetingResponse(message, context);
+        }
+        
+        if (context.previousTopics.length > 0) {
+            const topic = context.previousTopics[0];
+            return `🤔 **Interesting question!** \n\nI notice we've been discussing ${topic === 'ml' ? 'machine learning' : topic}. While I'd love to help with that specific question, I'm most effective when discussing:\n\n📚 **Academic Topics** - Study materials, research, learning strategies\n🎓 **Educational Planning** - Scholarships, applications, career guidance\n💡 **Skill Development** - Technical skills, programming, mathematics\n✍️ **Academic Writing** - Essays, papers, applications\n\nCould you rephrase your question in relation to your educational goals? I'm here to help you succeed academically!`;
+        }
+        
+        return "🎯 **I'm focused on helping with academic and educational topics.**\n\nI can assist with:\n\n🔍 **Research Guidance** - Finding the right materials\n📝 **Writing Support** - Essays, applications, and more\n🎯 **Study Planning** - Effective learning strategies\n💰 **Financial Aid** - Scholarship and funding options\n\nHow can I help with your educational goals?";
     }
 
     getGreetingResponse() {
@@ -496,6 +628,68 @@ class ChatbotApp {
             this.chats = this.chats.slice(-20);
         }
         localStorage.setItem('chatSessions', JSON.stringify(this.chats));
+    }
+
+    // Enhanced response methods with context awareness
+    getStudyMaterialResponse(message, context) {
+        const responses = [
+            "📚 **Study Materials - Your Learning Hub:**\n\n**🎯 Available Resources:**\n• **AI & Machine Learning** - TensorFlow guides, research papers, tutorials\n• **Computer Science** - Algorithms, data structures, programming languages\n• **Mathematics** - Calculus, linear algebra, statistics\n• **Data Science** - Python, R, statistical analysis, visualization\n• **Research Methods** - Academic writing, methodology, citation styles\n\n**📖 Resource Types:**\n• **Interactive Tutorials** - Step-by-step learning paths\n• **Research Papers** - Latest academic publications\n• **Video Lectures** - University courses and expert talks\n• **Practice Problems** - Coding challenges and exercises\n• **Project Templates** - Real-world application examples\n\n**🔍 Smart Search Features:**\n• Filter by difficulty level (beginner to expert)\n• Sort by ratings and popularity\n• Subject-specific categorization\n• Semester and course alignment\n\n**💡 Study Tips:**\n• Start with fundamentals before advanced topics\n• Practice with real datasets and problems\n• Join study groups and discussion forums\n• Create your own notes and summaries\n\nWhat subject or skill would you like to explore? I can recommend specific materials!",
+            
+            "🎓 **Personalized Learning Recommendations:**\n\n**📊 Popular Study Areas:**\n• **Artificial Intelligence** (4.8★) - 156 resources\n• **Data Science** (4.7★) - 203 resources  \n• **Computer Vision** (4.6★) - 94 resources\n• **Machine Learning** (4.5★) - 89 resources\n• **Natural Language Processing** (4.3★) - 67 resources\n\n**🚀 Trending Topics:**\n• **Large Language Models** - GPT, BERT, Transformers\n• **Computer Vision** - Vision Transformers, CLIP\n• **MLOps** - Model deployment and monitoring\n• **Ethical AI** - Bias detection and fairness\n\n**📱 Access Options:**\n• **Online Platform** - Browse and search materials\n• **Mobile App** - Study on-the-go\n• **Offline Downloads** - Study without internet\n• **Community Features** - Share and discuss\n\n**🎯 Personalization:**\n• Track your learning progress\n• Get recommendations based on interests\n• Save favorites and create collections\n• Connect with study partners\n\nWhich learning path interests you most?"
+        ];
+        
+        if (context.previousTopics.includes('study')) {
+            return "📚 **Building on Your Study Plan:**\n\nSince we've been discussing study materials, let me suggest some advanced strategies:\n\n**🎯 Active Learning Techniques:**\n• **Feynman Technique** - Explain concepts simply\n• **Spaced Repetition** - Review at increasing intervals\n• **Interleaving** - Mix different topics in study sessions\n• **Practice Testing** - Quiz yourself regularly\n\n**📊 Progress Tracking:**\n• Set weekly learning goals\n• Track time spent on each subject\n• Monitor comprehension levels\n• Celebrate milestones achieved\n\nWhat specific subject would you like to focus on next?";
+        }
+        
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    getScholarshipResponse(message, context) {
+        const responses = [
+            "💰 **Scholarship Opportunities - Your Funding Guide:**\n\n**🏆 Featured Scholarships:**\n• **Google AI Research** ($50,000) - AI/ML research focus\n• **Microsoft Diversity in Tech** ($25,000) - Underrepresented groups\n• **NSF Graduate Fellowship** ($37,000/year) - STEM research\n• **Gates Millennium Scholars** (Full tuition) - Leadership potential\n• **Thiel Fellowship** ($100,000) - Entrepreneurial projects\n\n**📋 Application Requirements:**\n• **Academic Excellence** - Strong GPA and coursework\n• **Personal Essays** - Compelling personal narrative\n• **Letters of Recommendation** - From professors/mentors\n• **Research Experience** - Publications or projects\n• **Community Impact** - Leadership and service\n\n**✍️ Essay Writing Tips:**\n• Tell your unique story authentically\n• Connect experiences to future goals\n• Show impact and leadership potential\n• Address selection criteria directly\n• Proofread carefully for errors\n\n**📅 Application Strategy:**\n• Start early - many deadlines are in fall/winter\n• Apply broadly - don't limit to one scholarship\n• Tailor each application to specific criteria\n• Track deadlines and requirements carefully\n\nWhat field of study are you pursuing? I can suggest targeted scholarships!",
+            
+            "🎯 **Scholarship Success Strategy:**\n\n**💡 Types of Funding:**\n• **Merit-Based** - Academic achievement and potential\n• **Need-Based** - Financial circumstances\n• **Diversity** - Underrepresented groups in STEM\n• **Research** - Specific projects or fields\n• **International** - Study abroad opportunities\n\n**🔍 Finding Opportunities:**\n• **University Resources** - Financial aid office\n• **Professional Organizations** - IEEE, ACM, etc.\n• **Government Programs** - NSF, NIH, DOE\n• **Corporate Sponsors** - Google, Microsoft, Adobe\n• **Foundation Grants** - Private philanthropic organizations\n\n**📈 Maximizing Success:**\n• **Build Strong Profile** - Research, leadership, service\n• **Network Actively** - Connect with faculty and professionals\n• **Seek Mentorship** - Guidance from successful applicants\n• **Practice Interviews** - Many scholarships include interviews\n\n**🎓 Beyond Money:**\n• **Networking Opportunities** - Connect with other scholars\n• **Mentorship Programs** - Industry professionals\n• **Conference Access** - Present research and learn\n• **Career Support** - Job placement assistance\n\nWould you like help with scholarship essays or finding specific opportunities?"
+        ];
+        
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    getEssayResponse(message, context) {
+        const responses = [
+            "✍️ **Essay Writing Mastery:**\n\n**📝 Essay Structure Framework:**\n\n**1. Introduction (10-15%)**\n• **Hook** - Compelling opening that grabs attention\n• **Context** - Background information and relevance\n• **Thesis** - Clear main argument or purpose\n\n**2. Body Paragraphs (70-80%)**\n• **Topic Sentence** - Main point of each paragraph\n• **Evidence** - Examples, data, quotes, experiences\n• **Analysis** - Explain how evidence supports your point\n• **Transition** - Connect to next paragraph smoothly\n\n**3. Conclusion (10-15%)**\n• **Restate Thesis** - Reinforce main argument\n• **Synthesize** - Bring key points together\n• **Call to Action** - What should reader think/do?\n\n**🎯 Writing Process:**\n• **Brainstorm** - Generate ideas without judgment\n• **Outline** - Organize thoughts logically\n• **Draft** - Write without editing initially\n• **Revise** - Improve content and structure\n• **Edit** - Fix grammar, spelling, style\n• **Proofread** - Final check for errors\n\n**💡 Pro Tips:**\n• Show, don't tell - Use specific examples\n• Vary sentence structure for engagement\n• Use active voice for clarity\n• Read aloud to catch awkward phrasing\n\nWhat type of essay are you working on?",
+            
+            "📚 **Advanced Essay Techniques:**\n\n**🎨 Compelling Storytelling:**\n• **Personal Narrative** - Share meaningful experiences\n• **Character Development** - Show growth and learning\n• **Conflict Resolution** - Overcome challenges\n• **Vivid Details** - Help readers visualize scenes\n\n**🔍 Research & Evidence:**\n• **Primary Sources** - Original documents, interviews\n• **Secondary Sources** - Scholarly articles, books\n• **Statistical Data** - Support claims with numbers\n• **Expert Opinions** - Quotes from authorities\n• **Proper Citation** - APA, MLA, Chicago styles\n\n**✨ Style & Voice:**\n• **Authentic Voice** - Write in your natural style\n• **Appropriate Tone** - Match audience expectations\n• **Varied Vocabulary** - Avoid repetitive language\n• **Smooth Transitions** - Connect ideas seamlessly\n\n**🎯 Common Essay Types:**\n• **Personal Statement** - College/scholarship applications\n• **Research Paper** - Academic investigation\n• **Argumentative** - Persuade with evidence\n• **Analytical** - Examine and interpret\n• **Narrative** - Tell a story with purpose\n\nWhich essay type would you like specific guidance on?"
+        ];
+        
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    getStudyTipsResponse(message, context) {
+        return "💡 **Study Success Strategies:**\n\n**⏰ Time Management:**\n• **Pomodoro Technique** - 25 min focus, 5 min break\n• **Time Blocking** - Dedicate specific hours to subjects\n• **Priority Matrix** - Urgent vs. important tasks\n• **Weekly Planning** - Schedule study sessions in advance\n\n**🧠 Memory & Learning:**\n• **Active Recall** - Test yourself without looking at notes\n• **Spaced Repetition** - Review material at increasing intervals\n• **Elaborative Interrogation** - Ask 'why' and 'how' questions\n• **Dual Coding** - Combine visual and verbal information\n\n**📍 Environment & Focus:**\n• **Dedicated Space** - Consistent study location\n• **Minimize Distractions** - Phone away, clean workspace\n• **Optimal Lighting** - Natural light or bright lamp\n• **Background Sound** - Silence, white noise, or instrumental music\n\n**👥 Social Learning:**\n• **Study Groups** - Explain concepts to peers\n• **Teaching Others** - Best way to solidify understanding\n• **Discussion Forums** - Online academic communities\n• **Office Hours** - Connect with professors and TAs\n\n**📊 Progress Tracking:**\n• **Learning Goals** - Specific, measurable objectives\n• **Regular Assessment** - Weekly self-evaluation\n• **Mistake Analysis** - Learn from errors systematically\n• **Celebration** - Acknowledge achievements\n\n**🎯 Subject-Specific Tips:**\n• **STEM** - Practice problems, visual diagrams\n• **Languages** - Immersion, conversation practice\n• **History** - Timeline creation, cause-effect analysis\n• **Literature** - Close reading, thematic analysis\n\nWhat subject or study challenge would you like specific help with?";
+    }
+
+    getGreetingResponse(message, context) {
+        const timeOfDay = new Date().getHours();
+        let greeting = "Hello";
+        
+        if (timeOfDay < 12) greeting = "Good morning";
+        else if (timeOfDay < 17) greeting = "Good afternoon";
+        else greeting = "Good evening";
+        
+        const greetings = [
+            `👋 **${greeting}! Welcome to NovaLearn AI**\n\nI'm your AI learning companion, designed to help you excel in your academic journey. Whether you're looking for study materials, scholarship opportunities, or academic guidance, I'm here to support you.\n\n**🎯 How I Can Help:**\n📚 **Study Resources** - Find materials for any subject\n🎓 **Scholarships** - Discover funding opportunities  \n✍️ **Writing Support** - Essays and applications\n💡 **Learning Strategies** - Effective study techniques\n🚀 **Career Guidance** - Academic and professional planning\n\nWhat brings you here today? I'm excited to help you succeed!`,
+            
+            `${greeting}! 🌟 **Ready to accelerate your learning?**\n\nI'm here to be your academic partner, helping you navigate everything from coursework to career planning. With access to comprehensive resources and personalized guidance, we can tackle any educational challenge together.\n\n**✨ What Makes Me Different:**\n• **Personalized Recommendations** - Tailored to your goals\n• **Up-to-Date Resources** - Latest materials and opportunities\n• **Comprehensive Support** - From study tips to career advice\n• **Available 24/7** - Learn at your own pace\n\nWhat academic goal can I help you achieve today?`,
+            
+            `Hey there! 😊 **Welcome to your AI study buddy**\n\nI'm passionate about helping students like you reach their full potential. Whether you're just starting your academic journey or pursuing advanced research, I've got the resources and guidance to support your success.\n\n**🎓 Popular Topics I Help With:**\n• Machine Learning & AI fundamentals\n• Computer Science and programming\n• Research methodology and academic writing\n• Scholarship applications and essays\n• Study strategies and time management\n\nWhat's on your academic mind today? Let's dive in!`
+        ];
+        
+        if (context.messageCount > 0) {
+            return `${greeting} again! 😊 Great to continue our conversation.\n\nHow can I further assist with your academic goals today?`;
+        }
+        
+        return greetings[Math.floor(Math.random() * greetings.length)];
     }
 }
 

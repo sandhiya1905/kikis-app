@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Status - NovaLearn</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .status-card {
+            transition: all 0.3s ease;
+        }
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .status-online {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        .status-offline {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        .feature-new {
+            position: relative;
+        }
+        .feature-new::after {
+            content: 'NEW';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #f59e0b;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="flex items-center">
+                        <i class="fas fa-graduation-cap text-2xl mr-3"></i>
+                        <span class="text-xl font-bold">NovaLearn</span>
+                    </a>
+                    <div class="ml-8">
+                        <span class="bg-blue-700 px-3 py-2 rounded-lg">
+                            <i class="fas fa-server mr-2"></i>Platform Status
+                        </span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="index.html" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded-lg transition">
+                        <i class="fas fa-home mr-2"></i>Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <i class="fas fa-server text-blue-600 mr-3"></i>
+                NovaLearn Platform Status
+            </h1>
+            <p class="text-xl text-gray-600">
+                Real-time status of all platform services and features
+            </p>
+        </div>
+
+        <!-- Overall Status -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Platform Status</h2>
+                    <p class="text-gray-600">All systems operational</p>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                    <span class="text-green-600 font-semibold">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Status -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                <i class="fas fa-cogs mr-2"></i>Backend Services
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Web Server</h3>
+                        <div id="webStatus" class="status-online text-white px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i>Online
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-3">Frontend application server</p>
+                    <div class="text-sm text-gray-500">
+                        <div><strong>Port:</strong> 3000</div>
+                        <div><strong>URL:</strong> <a href="http://localhost:3000" class="text-blue-600 hover:underline">http://localhost:3000</a></div>
+                    </div>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Auth Service</h3>
+                        <div id="authStatus" class="status-online text-white px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i>Online
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-3">User authentication & management</p>
+                    <div class="text-sm text-gray-500">
+                        <div><strong>Port:</strong> 3001</div>
+                        <div><strong>URL:</strong> <a href="http://localhost:3001" class="text-blue-600 hover:underline">http://localhost:3001</a></div>
+                    </div>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Content Service</h3>
+                        <div id="contentStatus" class="status-online text-white px-3 py-1 rounded-full text-sm">
+                            <i class="fas fa-check mr-1"></i>Online
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-3">Study materials & content management</p>
+                    <div class="text-sm text-gray-500">
+                        <div><strong>Port:</strong> 3002</div>
+                        <div><strong>URL:</strong> <a href="http://localhost:3002" class="text-blue-600 hover:underline">http://localhost:3002</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                <i class="fas fa-star mr-2"></i>Platform Features
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-home text-2xl text-blue-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">Main Dashboard</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Landing page and user dashboard</p>
+                    <a href="http://localhost:3000" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-external-link-alt mr-2"></i>Visit Page
+                    </a>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-book text-2xl text-green-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">Study Materials</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Browse and manage study content</p>
+                    <a href="http://localhost:3000/study-materials.html" class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-external-link-alt mr-2"></i>Visit Page
+                    </a>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-graduation-cap text-2xl text-purple-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">Scholarships</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Find scholarship opportunities</p>
+                    <a href="http://localhost:3000/scholarships.html" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-external-link-alt mr-2"></i>Visit Page
+                    </a>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6 feature-new">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-user-tie text-2xl text-orange-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">Interview Prep</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">AI-powered mock interviews</p>
+                    <a href="http://localhost:3000/interview-prep.html" class="inline-block bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-external-link-alt mr-2"></i>Visit Page
+                    </a>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-robot text-2xl text-indigo-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">AI Assistant</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">Basic AI chat helper</p>
+                    <a href="http://localhost:3000/chatbot.html" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-external-link-alt mr-2"></i>Visit Page
+                    </a>
+                </div>
+
+                <div class="status-card bg-white rounded-lg shadow-md p-6 feature-new">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-brain text-2xl text-pink-600 mr-3"></i>
+                        <h3 class="text-lg font-semibold">Enhanced AI Chat</h3>
+                    </div>
+                    <p class="text-gray-600 mb-4">ChatGPT-like experience</p>
+                    <a href="http://localhost:3000/enhanced-chatbot.html" class="inline-block bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition text-sm">
+                        <i class="fas fa-star mr-2"></i>Try Now
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                <i class="fas fa-info-circle mr-2"></i>System Information
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Platform Details</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Platform Version:</span>
+                            <span class="font-medium">v2.0.0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Build Date:</span>
+                            <span class="font-medium" id="buildDate"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Environment:</span>
+                            <span class="font-medium">Development</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Database:</span>
+                            <span class="font-medium">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">New Features</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Interview Preparation System</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Enhanced AI Assistant</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>ChatGPT-like Interface</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Code Syntax Highlighting</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span>Conversation History</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 text-center">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="http://localhost:3000" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+                    <i class="fas fa-home mr-2"></i>Go to Dashboard
+                </a>
+                <a href="http://localhost:3000/enhanced-chatbot.html" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-lg transition">
+                    <i class="fas fa-star mr-2"></i>Try Enhanced AI
+                </a>
+                <a href="http://localhost:3000/interview-prep.html" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg transition">
+                    <i class="fas fa-user-tie mr-2"></i>Practice Interview
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set build date
+        document.getElementById('buildDate').textContent = new Date().toLocaleDateString();
+        
+        // Check service status
+        async function checkServiceStatus() {
+            const services = [
+                { id: 'webStatus', url: 'http://localhost:3000', name: 'Web Server' },
+                { id: 'authStatus', url: 'http://localhost:3001/health', name: 'Auth Service' },
+                { id: 'contentStatus', url: 'http://localhost:3002/health', name: 'Content Service' }
+            ];
+            
+            for (const service of services) {
+                try {
+                    const response = await fetch(service.url);
+                    const statusEl = document.getElementById(service.id);
+                    
+                    if (response.ok) {
+                        statusEl.className = 'status-online text-white px-3 py-1 rounded-full text-sm';
+                        statusEl.innerHTML = '<i class="fas fa-check mr-1"></i>Online';
+                    } else {
+                        throw new Error('Service unavailable');
+                    }
+                } catch (error) {
+                    const statusEl = document.getElementById(service.id);
+                    statusEl.className = 'status-offline text-white px-3 py-1 rounded-full text-sm';
+                    statusEl.innerHTML = '<i class="fas fa-times mr-1"></i>Offline';
+                }
+            }
+        }
+        
+        // Check status on load and every 30 seconds
+        checkServiceStatus();
+        setInterval(checkServiceStatus, 30000);
+    </script>
+</body>
+</html>
