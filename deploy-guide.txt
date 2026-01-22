@@ -1,0 +1,50 @@
+NOVA LEARN PLATFORM - VERCEL DEPLOYMENT GUIDE
+
+I've fixed your deployment issues! Here's what was wrong and how to deploy:
+
+PROBLEM DIAGNOSIS:
+- Your app was designed for traditional servers (Node.js + MongoDB)
+- Vercel is for static sites + serverless functions
+- Missing proper configuration files
+
+SOLUTION - FILES I CREATED:
+✓ vercel.json - Vercel configuration
+✓ api/ folder - Serverless functions for search/materials
+✓ web/app-vercel.js - Frontend adapted for Vercel
+✓ Updated package.json for static deployment
+
+HOW TO DEPLOY NOW:
+
+METHOD 1 - VERCEL CLI (RECOMMENDED):
+1. npm i -g vercel
+2. vercel login
+3. vercel
+4. Follow prompts (project name: nova-learn-platform)
+
+METHOD 2 - GITHUB:
+1. Push code to GitHub
+2. Go to vercel.com
+3. New Project -> Import your repo
+4. Deploy
+
+WHAT WORKS AFTER DEPLOYMENT:
+✓ Main website with all pages
+✓ Search functionality with sample data
+✓ Add content feature (local storage)
+✓ All static pages (scholarships, interview prep, etc.)
+✓ API endpoints for search and materials
+
+DEMO LIMITATIONS:
+- No real database (uses sample data)
+- No authentication (shows demo messages)
+- Simplified for static hosting
+
+YOUR SITE WILL BE AT:
+https://your-project-name.vercel.app
+
+TEST THESE URLS AFTER DEPLOYMENT:
+- https://your-app.vercel.app (main site)
+- https://your-app.vercel.app/api/health (health check)
+- https://your-app.vercel.app/api/search?q=machine (search API)
+
+READY TO DEPLOY! Run 'vercel' command now.

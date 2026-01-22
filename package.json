@@ -4,43 +4,13 @@
   "description": "A comprehensive web-based learning platform for college students",
   "main": "index.js",
   "scripts": {
-    "start": "node scripts/start-application.js",
-    "start:simple": "node scripts/start-simple.js",
-    "start:web": "cd web && npm start",
-    "start:all": "concurrently \"npm run start:simple\" \"npm run start:web\"",
-    "setup": "node scripts/seed-data.js",
-    "test-apis": "node scripts/test-apis.js",
-    "dev": "concurrently \"npm run dev:auth\" \"npm run dev:content\"",
-    "dev:auth": "cd services/auth-service && npm run dev",
-    "dev:content": "cd services/content-service && npm run dev",
-    "dev:scholarship": "cd services/scholarship-service && npm run dev",
-    "dev:interview": "cd services/interview-service && npm run dev",
-    "dev:ai": "cd services/ai-service && python app.py",
-    "dev:gateway": "cd api-gateway && npm run dev",
-    "test": "npm run test:services",
-    "test:services": "concurrently \"npm run test:auth\" \"npm run test:content\"",
-    "test:auth": "cd services/auth-service && npm test",
-    "test:content": "cd services/content-service && npm test",
-    "test:scholarship": "cd services/scholarship-service && npm test",
-    "test:interview": "cd services/interview-service && npm test",
-    "install:all": "npm install && cd services/auth-service && npm install && cd ../content-service && npm install && cd ../web && npm install",
-    "postman:setup": "node postman/setup-postman.js",
-    "postman:test": "node postman/scripts/test-runner.js",
-    "postman:integration": "node postman/scripts/integration.js",
-    "test:api": "node scripts/postman-workflow.js test",
-    "api:docs": "node scripts/postman-workflow.js docs",
-    "workflow:postman": "node scripts/postman-workflow.js"
+    "build": "echo 'Build complete'",
+    "start": "echo 'Static site - no start needed'",
+    "dev": "echo 'Development mode'"
   },
   "keywords": ["education", "learning", "ai", "interview", "scholarship"],
   "author": "NovaLearn Team",
   "license": "MIT",
-  "dependencies": {
-    "axios": "^1.6.2",
-    "dotenv": "^16.3.1",
-    "mongoose": "^8.0.3",
-    "bcryptjs": "^2.4.3"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
